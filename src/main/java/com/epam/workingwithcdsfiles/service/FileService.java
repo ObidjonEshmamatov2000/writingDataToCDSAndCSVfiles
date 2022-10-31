@@ -1,11 +1,11 @@
-package com.epam.workingwithcdsfiles;
+package com.epam.workingwithcdsfiles.service;
 
+import com.epam.workingwithcdsfiles.model.FileContent;
+import com.epam.workingwithcdsfiles.model.FileInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 @Service
 public class FileService {
@@ -29,8 +29,11 @@ public class FileService {
     }
 
     private void writeFileInfoToCSV(FileInfo fileInfo) {
-        File file = new File("File_Log_Info.csv");
-        try (FileOutputStream os = new FileOutputStream(file)) {
+        File file = new File("./db/data/my.files-FileInfo.csv");
+        try(PrintWriter printWriter = new PrintWriter(file);) {
+            String st = "ID;name;size;date";
+            printWriter.write(st);
+            printWriter.println();
             String sb = fileInfo.getId() +
                     ";" +
                     fileInfo.getName() +
@@ -38,25 +41,22 @@ public class FileService {
                     fileInfo.getSize() +
                     ";" +
                     fileInfo.getDate();
-            char[] chars = sb.toCharArray();
-            for (char c: chars) {
-                os.write(c);
-            }
-        } catch (IOException e) {
+            printWriter.write(sb);
+            printWriter.flush();
+        } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
 
     private void writeFileContentToCSV(FileContent fileContent) {
         String s = new String(fileContent.getContent());
-        File file = new File("File_Content.csv");
-        try (FileOutputStream os = new FileOutputStream(file)) {
-            String sb = fileContent.getId() +
-                    ";" + s;
-            char[] chars = sb.toCharArray();
-            for (char c: chars) {
-                os.write(c);
-            }
+        File file = new File("./db/data/my.files-FileContent.csv");
+        try (PrintWriter printWriter = new PrintWriter(file)) {
+            String st = "ID;content";
+            printWriter.write(st);
+            printWriter.println();
+            String sb = fileContent.getId() + ";" + s;
+            printWriter.write(sb);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

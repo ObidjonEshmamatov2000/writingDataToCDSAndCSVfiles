@@ -1,4 +1,4 @@
-package com.epam.workingwithcdsfiles;
+package com.epam.workingwithcdsfiles.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
